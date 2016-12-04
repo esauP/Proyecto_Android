@@ -3,11 +3,33 @@ package net.sgoliver.android.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements FragmentListado.CorreosListener {
+       /* implements FragmentListado.CorreosListener */{
+
+
+
+    private VectorAlumnos vectorAlumnos;
+    private AdaptadorAlumnos adaptador;
+
+    Alumno alumno1 = new Alumno("String nombre", "String dni", "String curso", "String telefono", "String emai");
+    Alumno alumno2 = new Alumno("String nombre", "String dni", "String curso", "String telefono", "String emai");
+    Alumno alumno3 = new Alumno("String nombre", "String dni", "String curso", "String telefono", "String emai");
+    Alumno alumno4 = new Alumno("String nombre", "String dni", "String curso", "String telefono", "String emai");
+
+    List<Alumno> lista = new ArrayList<>();
+
+    RecyclerView lstListado;
+    long id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +40,34 @@ public class MainActivity extends AppCompatActivity
                 (FragmentListado)getSupportFragmentManager()
                     .findFragmentById(R.id.FrgListado);
 
-        frgListado.setCorreosListener(this);
+
+
+        lista.add(alumno1);
+        lista.add(alumno2);
+        lista.add(alumno3);
+        lista.add(alumno4);
+
+        vectorAlumnos = new VectorAlumnos(lista);
+
+
+        lstListado = (RecyclerView) findViewById(R.id.LstListado);
+
+        adaptador = new AdaptadorAlumnos(this, vectorAlumnos);
+
+        lstListado.setAdapter(adaptador);
+
+
+        adaptador.setOnItemClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                id = (long) lstListado.getChildAdapterPosition(view);
+                DetalleActivity fragment = new DetalleActivity();
+
+            }
+        });
+
+//        frgListado.setCorreosListener(this);
     }
 
     @Override
@@ -43,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+   /* @Override
     public void onCorreoSeleccionado(Correo c) {
         boolean hayDetalle =
                 (getSupportFragmentManager().findFragmentById(R.id.FrgDetalle) != null);
@@ -57,5 +106,5 @@ public class MainActivity extends AppCompatActivity
             i.putExtra(DetalleActivity.EXTRA_TEXTO, c.getTexto());
             startActivity(i);
         }
-    }
+    }*/
 }
